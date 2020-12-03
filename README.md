@@ -1,7 +1,7 @@
 # AQA Physics Body Simulator
 
 ## Ideas for the project
-- A
+- Simulates gravitational interactions between multiple bodies in space.
 - B
 - C
 
