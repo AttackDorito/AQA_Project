@@ -27,7 +27,7 @@ objectList = [] #list of all objects
 
 xMove = 0
 yMove = 0
-scaleFactor = 1000 #number of metres per pixel
+scaleFactor = 10000 #number of metres per pixel
 phystime = 10 #physics frame time in seconds
 
 keyPlus = False
@@ -55,20 +55,20 @@ class Body():       #A body affected by gravitational forces
                 continue
             tempForce = [0,0]
 
-            rad = int(sqrt((self.posxy[0] - body.posxy[0])**2 + (self.posxy[1] - body.posxy[1])**2))
+            rad = sqrt((self.posxy[0] - body.posxy[0])**2 + (self.posxy[1] - body.posxy[1])**2)
 
             Force = (G*self.mass*body.mass)/(rad**2)
             tempForce[0] = Force * ((self.posxy[0] - body.posxy[0])/rad)
             tempForce[1] = Force * ((self.posxy[1] - body.posxy[1])/rad)
 
             
-            if self.pos[0] > body.pos[0]:
+            if self.posxy[0] > body.posxy[0]:
                 self.force[0] -= abs(tempForce[0])
             else:
                 self.force[0] += abs(tempForce[0])
                 
                 
-            if self.pos[1] > body.pos[1]:
+            if self.posxy[1] > body.posxy[1]:
                 self.force[1] -= abs(tempForce[1])
             else:
                 self.force[1] += abs(tempForce[1])
@@ -93,9 +93,9 @@ def scaleFormat(scale):
 
 font = pygame.freetype.SysFont("Arial.ttf",24)
 
-sun = Body((1.989*10**30),[0,0],[-(148*10**6),0],circle)
-earth = Body((5.972*10**24),[0,29780],[0,0],planetimg)
-moon = Body((7.348*10**22),[0,(1022+29780)],[384400000,0],circle)
+#sun = Body((1.989*10**30),[0,0],[-(148*10**6),0],circle)
+earth = Body((5.972*10**24),[0,0],[0,0],planetimg)
+moon = Body((7.348*10**22),[0,1022],[384402000,0],circle)
 
 def nextFrame():
     for item in objectList:
@@ -120,7 +120,7 @@ while True:
         clockCounter = 0
         clock.tick()
         screen.blit(background,(0,0,400,50))
-        font.render_to(screen,(0,0),f"{round(secondCount/86400,1)}d, {yearCount} y {scaleFormat(1080*scaleFactor)} Metres across",(255,255,255))
+        font.render_to(screen,(0,0),f"{round(secondCount/86400,1)}d, {yearCount} y {scaleFormat(1080*scaleFactor)} Metres across \n earth {list(map(round,earth.posxy))} \n moon {list(map(round,moon.posxy))}",(255,255,255))
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
@@ -161,9 +161,9 @@ while True:
         if keyDown:
             yMove -= 2*scaleFactor**2
         if keyMinus:
-            scaleFactor += 100
+            scaleFactor += 1000
         if keyPlus:
-            scaleFactor -= 100
+            scaleFactor -= 1000
             if scaleFactor < 1:
                 scaleFactor = 1
         
