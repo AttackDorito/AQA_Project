@@ -15,6 +15,7 @@ pygame.display.flip()                                # updates the window to dis
 
 circle = pygame.image.load('circle.png')             # loads icons to represent the objects
 planetimg = pygame.image.load('planet.png')          # "
+star = pygame.image.load('star.png')
 
 clock = pygame.time.Clock()                          # creates a clock object which keeps track of the time since the last tick
 clock.tick()                                         # staarts the clock
@@ -25,7 +26,7 @@ objectList = []             # list of all objects
 xMove = 0
 yMove = 0
 scaleFactor = 1000          # number of metres per pixel
-phystime = 1                # physics frame time in seconds
+phystime = 10             # physics frame time in seconds
 
 keyPlus = False
 keyMinus = False
@@ -93,9 +94,11 @@ def scaleFormat(scale):
 
 font = pygame.freetype.SysFont("Arial.ttf",24)                                                  # sets up the font for drawing onscreen
 
-sun = Body((1.989*10**30),[0,0],[-(148*10**6),0],circle)                                        # 
-earth = Body((5.972*10**24),[0,0],[0,0],planetimg)                                              # defining bodies to be simulated
-moon = Body((7.348*10**22),[0,1022],[384402000,0],circle)                                       # 
+sun = Body((1.989e+30),[0,0],[0,0],star)                                        # 
+earth = Body((5.972*10**24),[0,-29780],[149600000000,0],planetimg)                                              # defining bodies to be simulated
+moon = Body((7.348*10**22),[0,-1022-29780],[384402000+149600000000,0],circle)                                       # 
+
+objectList.reverse()
 
 def nextFrame():                                                                                # calculates for every object and then updates their positions
     for item in objectList:
