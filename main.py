@@ -47,9 +47,8 @@ class Body():                                         # A body affected by gravi
         self.pos = image.get_rect()
         self.image = image
         
-    def calculate(self):                             # calculates the net acceleration of the body
-        self.force = [0,0]                           # resets force to 0
-        for body in objectList:                      # iterates through all simulated bodies 
+    def calculate(self):                             # calculates the net acceleration of the body                           # resets force to 0
+        for body in objectList[self.index:]:                      # iterates through all simulated bodies 
             if body.index == self.index:             # skips calculating force for itself
                 continue                
             tempForce = [0,0]                   
@@ -62,24 +61,30 @@ class Body():                                         # A body affected by gravi
 
             
             if self.posxy[0] > body.posxy[0]:                                                   # adds the force  on the x axis to the total    
-                self.force[0] -= abs(tempForce[0])                                                  
+                self.force[0] -= abs(tempForce[0])
+                body.force[0] += abs(tempForce[0])                                              
             else:
                 self.force[0] += abs(tempForce[0])
+                body.force[0] -= abs(tempForce[0])
                 
 
             if self.posxy[1] < body.posxy[1]:                                                   # adds the force on the y axis to the total
                 self.force[1] -= abs(tempForce[1])
+                body.force[1] += abs(tempForce[1])
             else:
                 self.force[1] += abs(tempForce[1])
+                body.force[1] -= abs(tempForce[1])
 
         self.accel[0] = self.force[0] / self.mass                                               # finds the x,y components of the acceleration of the body
-        self.accel[1] = self.force[1] / self.mass                                               #
+        self.accel[1] = self.force[1] / self.mass
+        print(f"calculated {self.mass}")                                             #
 
     def frame(self):                                                                            # applies the acceleration calculated in the calculate function
         self.posxy[0] += ((self.velxy[0]*phystime) + (0.5*self.accel[0])*phystime)              # and updates the position of the object
         self.posxy[1] += (-(self.velxy[1]*phystime) + (0.5*self.accel[1])*phystime)
         self.velxy[0] += (self.accel[0]*phystime)
         self.velxy[1] += (self.accel[1]*phystime)
+        self.force = [0,0]
     def drawFrame(self):
         self.frame()
         try:                                                                                    # prevents crash due to zooming in too fast
