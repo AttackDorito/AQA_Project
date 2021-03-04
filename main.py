@@ -13,9 +13,9 @@ background.fill((0,0,0))                             # fills the background with
 screen.blit(background,(0,0))                        # updates the screen surface with the background
 pygame.display.flip()                                # updates the window to display the changes to the user
 
-circle = pygame.image.load('circle.png')             # loads icons to represent the objects
-planetimg = pygame.image.load('planet.png')          # "
-star = pygame.image.load('star.png')
+moon_img = pygame.image.load('circle.png')             # loads icons to represent the objects
+planet_img = pygame.image.load('planet.png')          # "
+star_img = pygame.image.load('star.png')
 
 clock = pygame.time.Clock()                          # creates a clock object which keeps track of the time since the last tick
 clock.tick()                                         # staarts the clock
@@ -94,9 +94,9 @@ def scaleFormat(scale):
 
 font = pygame.freetype.SysFont("Arial.ttf",24)                                                  # sets up the font for drawing onscreen
 
-sun = Body((1.989e+30),[0,0],[0,0],star)                                        # 
-earth = Body((5.972*10**24),[0,-29780],[149600000000,0],planetimg)                                              # defining bodies to be simulated
-moon = Body((7.348*10**22),[0,-1022-29780],[384402000+149600000000,0],circle)                                       # 
+sun = Body((1.989e+30),[0,0],[0,0],star_img)                                        # 
+earth = Body((5.972*10**24),[0,-29780],[149600000000,0],planet_img)                                              # defining bodies to be simulated
+moon = Body((7.348*10**22),[0,-1022-29780],[384402000+149600000000,0],moon_img)                                       # 
 
 objectList.reverse()
 
