@@ -2,8 +2,8 @@ import pygame.display
 from math import sqrt
 
 class Body():
-    def __init__(self,mass = 1000, vel = [0,0], pos=[0,0], image='star.png'):
-        self.screen_pos = pos
+    def __init__(self,mass, vel, pos, image):
+        self.screen_pos = [0,0]
         self.image = pygame.image.load(image)
         self._mass = mass
         self._pos = pos
@@ -48,5 +48,5 @@ class Body():
         self._apply_force()
 
     def update_screen_pos(self, screen_offset, scale_factor, screen_size):
-        self.screen_pos[0] = ((self._pos[0] - screen_offset[0])/scale_factor**2)+ screen_size[0]/2
-        self.screen_pos[1] = ((self._pos[1] - screen_offset[1])/scale_factor**2) + screen_size[1]/2
+        self.screen_pos[0] = round(((self._pos[0] - screen_offset[0])/(scale_factor**2)) + screen_size[0]/2)
+        self.screen_pos[1] = round(((self._pos[1] - screen_offset[1])/(scale_factor**2)) + screen_size[1]/2)
