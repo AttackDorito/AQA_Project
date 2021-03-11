@@ -6,6 +6,9 @@ from i4_classes import Body
 
 screen = pygame.display.set_mode((1080,720), RESIZABLE)        
 pygame.display.set_caption('test window')
+background = pygame.Surface(screen.get_size())
+background = background.convert()
+background.fill((0,0,0))
 
 body_list = []
 scale_factor = 5
@@ -22,9 +25,9 @@ while True:
     if i == 1000:
         i = 0
         for item in body_list:
-           screen.blit(item.image, item.screen_pos)
-           item.update_screen_pos([0,0],scale_factor,screen_size)
-           pygame.display.update()
+           
+           item.update_screen_pos(screen, background, [0,0],scale_factor,screen_size)
+           pygame.display.update(item.screen_pos)
     for index, item in enumerate(body_list):
         item.calculate_movement(body_list[index+1:])
     for event in pygame.event.get():    # fetches event queue

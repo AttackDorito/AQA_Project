@@ -3,12 +3,13 @@ from math import sqrt
 
 class Body():
     def __init__(self,mass, vel, pos, image):
-        self.screen_pos = [0,0]
+        
         self.image = pygame.image.load(image)
         self._mass = mass
         self._pos = pos
         self._vel = vel
         self._force = [0,0]
+        self.screen_pos = self.image.get_rect()
 
     
     def _calculate_force(self, object_list, phys_step = 1, G = 6.67408e-11):
@@ -46,7 +47,10 @@ class Body():
     def calculate_movement(self, object_list, phys_step = 1, G = 6.67408e-11):
         self._calculate_force(object_list, phys_step)
         self._apply_force(phys_step)
-
-    def update_screen_pos(self, screen_offset, scale_factor, screen_size):
+        
+    def update_screen_pos(self, screen, background, screen_offset, scale_factor, screen_size):
+        screen.blit(background, self.screen_pos)  
         self.screen_pos[0] = round(((self._pos[0] - screen_offset[0])/(scale_factor**2)) + screen_size[0]/2)
         self.screen_pos[1] = round(((self._pos[1] - screen_offset[1])/(scale_factor**2)) + screen_size[1]/2)
+        screen.blit(self.image, self.screen_pos)
+        
