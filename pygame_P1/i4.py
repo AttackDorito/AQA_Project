@@ -39,4 +39,5 @@ while True:
             screen_size = pygame.display.get_window_size()
             background = pygame.Surface(screen.get_size())
             background.fill((0,0,0))
+            
     i += 1
