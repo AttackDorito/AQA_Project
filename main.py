@@ -125,7 +125,7 @@ while True:                                                                     
     if clockCounter > 16:                                                                       # limits program to only drawing at 60fps
         clockCounter = 0
         clock.tick()                                                                            # starts the clock again
-        #screen.blit(background,(0,0,400,50))                                                    # blacks out the text
+        screen.blit(background,(0,0))                                                    # blacks out the text
         font.render_to(screen,(0,0),f"{round(secondCount/86400,1)}d, {yearCount} y {scaleFormat(1920*scaleFactor)} across",(255,255,255)) # shows the time elapsed and the scale of the screen
         for event in pygame.event.get():                   # gets keyboard and mouse inputs
             if event.type == QUIT:                         # ends program if the window is closed
