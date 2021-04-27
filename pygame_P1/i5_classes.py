@@ -10,13 +10,14 @@ class Body():
         self._vel = vel
         self._force = [0,0]
         self.screen_pos = self.image.get_rect()
+        self.imname = image
 
     
-    def _calculate_force(self, object_list, phys_step = 1, G = 6.67408e-11):
+    def _calculate_force(self, object_list, G = 6.67408e-11):
         for body in object_list:
             dist = sqrt((self._pos[0] - body._pos[0])**2 + (self._pos[1] - body._pos[1])**2)
             temp_force = [0,0]
-            linear_force = G * (self._mass + body._mass) / (dist**2)
+            linear_force = G * (self._mass * body._mass) / (dist**2)
             temp_force[0] = (self._pos[0] - body._pos[0]) / dist * linear_force
             temp_force[1] = (self._pos[1] - body._pos[1]) / dist * linear_force
         
@@ -32,7 +33,8 @@ class Body():
             else:
                 self._force[1] += abs(temp_force[1])
                 body._force[1] -= abs(temp_force[1])
-        
+            #print(f'calc {self.imname} -> {body.imname}')
+
     def _apply_force(self,phys_step):
         accel = [(self._force[0]/self._mass),(self._force[1]/self._mass)]
 
@@ -42,10 +44,12 @@ class Body():
         self._vel[0] += accel[0] * phys_step
         self._vel[1] += accel[1] * phys_step
 
+        #print(f'applied {accel} to {self.imname}')
+
         self._force = [0,0]
-    
+        
     def calculate_movement(self, object_list, phys_step = 1, G = 6.67408e-11):
-        self._calculate_force(object_list, phys_step)
+        self._calculate_force(object_list)
         self._apply_force(phys_step)
         
     def update_screen_pos(self, screen, screen_offset, scale_factor, screen_size):

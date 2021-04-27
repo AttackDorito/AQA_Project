@@ -1,7 +1,7 @@
 from pygame.constants import RESIZABLE, VIDEORESIZE
 import pygame.display
 from pygame.locals import *
-from i5_classes import Body
+from i6_classes import Body
 from pygame import freetype
 
 pygame.init()
@@ -14,22 +14,36 @@ pygame.display.set_caption('test window')
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((0,0,0))
-
-
-
 body_list = []
+
+config_file = open('config_file.txt', "r")
+body_dict = {}
+for x in config_file:
+    line = (x.strip('\n').split(' = '))
+
+    if line != ['']:
+        body_dict[line[0]] = line[1]
+
+    if len(body_dict) == 5:
+        body_list.append(Body(
+            float(body_dict['mass']),
+            [float(body_dict['velocity'].split(',')[0]),float(body_dict['velocity'].split(',')[1])],
+            [float(body_dict['position'].split(',')[0]),float(body_dict['position'].split(',')[1])],
+            body_dict['image file'])
+        )
+
+        body_dict = {}
+
+
+
+
+
 
 scale_factor = 1000
 screen_offset = [0,0]
 
 screen_size = [1080,720]
 
-planet_zero = Body(1.989e+30, [0,0] , [0,0] , 'star.png')
-body_list.append(planet_zero)
-planet_one = Body(5.972e24, [0,-29780], [149600000000,0],'planet.png')
-body_list.append(planet_one)
-planet_two = Body(7.348e22,[0,-1022-29780],[384402000+149600000000,0],'circle.png')
-body_list.append(planet_two)
 
 
 clock_counter = 0
@@ -52,9 +66,10 @@ while True:
         screen.blit(background,(0,0))
         for item in body_list:
            item.update_screen_pos(screen, screen_offset, scale_factor, screen_size)
-        pygame.display.update()
+        
         font.render_to(screen, (0,0), f"{round(phys_framerate,-3)}",(255,255,255))
-    
+        pygame.display.update()
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
@@ -94,16 +109,17 @@ while True:
             screen_offset[1] -= 4*scale_factor**2
         if key_down:
             screen_offset[1] += 4*scale_factor**2
-        if key_minus:                                
-            if scale_factor <2:
-                scale_factor = 2
+        if key_minus:      
             scale_factor += 1000 * key_acceleration
-            key_acceleration += 0.1
+            key_acceleration += 0.1                          
+
+            
         elif key_plus:
             scale_factor -= 1000 * key_acceleration
             key_acceleration += 0.1
-            if scale_factor <2:
-                scale_factor = 2
+            if scale_factor <1000:
+                scale_factor = 1000
+
         else:
             key_acceleration = 0
         if event.type == VIDEORESIZE:

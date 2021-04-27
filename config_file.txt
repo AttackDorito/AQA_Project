@@ -1,0 +1,18 @@
+name = Sun
+mass = 1.989e+30
+velocity = 0,0
+position = 0,0
+image file = star.png
+
+name = Earth
+mass = 5.972e+24
+velocity = 0,-29780
+position = 1.496e+11,0
+image file = planet.png
+
+name = Moon
+mass = 7.348e+22
+velocity = 0,-30820
+position = 1.49984402e+11,0
+image file = moon.png
+

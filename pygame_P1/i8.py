@@ -1,7 +1,7 @@
 from pygame.constants import RESIZABLE, VIDEORESIZE
 import pygame.display
 from pygame.locals import *
-from i5_classes import Body
+from i8_classes import Body
 from pygame import freetype
 
 pygame.init()
@@ -14,22 +14,36 @@ pygame.display.set_caption('test window')
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((0,0,0))
-
-
-
 body_list = []
 
+config_file = open('config_file.txt', "r")
+body_dict = {}
+for x in config_file:
+    line = (x.strip('\n').split(' = '))
+
+    if line != ['']:
+        body_dict[line[0]] = line[1]
+
+    if len(body_dict) == 5:
+        body_list.append(Body(
+            float(body_dict['mass']),
+            [float(body_dict['velocity'].split(',')[0]),float(body_dict['velocity'].split(',')[1])],
+            [float(body_dict['position'].split(',')[0]),float(body_dict['position'].split(',')[1])],
+            body_dict['image file'],name = body_dict['name'])
+        )
+
+        body_dict = {}
+
+
+
+
+
+
 scale_factor = 1000
+simulation_speed = 1
+
 screen_offset = [0,0]
-
 screen_size = [1080,720]
-
-planet_zero = Body(1.989e+30, [0,0] , [0,0] , 'star.png')
-body_list.append(planet_zero)
-planet_one = Body(5.972e24, [0,-29780], [149600000000,0],'planet.png')
-body_list.append(planet_one)
-planet_two = Body(7.348e22,[0,-1022-29780],[384402000+149600000000,0],'circle.png')
-body_list.append(planet_two)
 
 
 clock_counter = 0
@@ -43,18 +57,23 @@ key_left = False
 key_right = False
 key_minus = False
 key_plus = False
+key_comma = False
+key_period = False
+key_[ = False   
+key_]
 
 while True:
     if clock_counter > 40:
-        phys_framerate = phys_counter / clock_counter * 1000
+        phys_framerate = phys_counter / clock_counter * 1000 * simulation_speed
         clock_counter = 0
         phys_counter = 0
         screen.blit(background,(0,0))
         for item in body_list:
            item.update_screen_pos(screen, screen_offset, scale_factor, screen_size)
+        
+        font.render_to(screen, (0,0), f"{round(phys_framerate,-3)},    {scale_factor}",(255,255,255))
         pygame.display.update()
-        font.render_to(screen, (0,0), f"{round(phys_framerate,-3)}",(255,255,255))
-    
+
         for event in pygame.event.get():
             if event.type == QUIT:
                 exit()
@@ -71,6 +90,10 @@ while True:
                     key_plus = True
                 if event.key == K_MINUS:
                     key_minus = True
+                if event.key == K_COMMA:
+                    key_comma = True
+                if event.key == K_PERIOD:
+                    key_period = True
                 
             elif event.type == KEYUP:
                 if event.key == K_LEFT:
@@ -85,6 +108,17 @@ while True:
                     key_plus = False
                 if event.key == K_MINUS:
                     key_minus = False
+                if event.key == K_COMMA:
+                    simulation_speed -= 10
+                    if simulation_speed < 1:
+                        simulation_speed = 0.01
+                    key_comma = False
+                if event.key == K_PERIOD:
+                    if simulation_speed <1:
+                        simulation_speed = 1
+                    else:
+                        simulation_speed += 10
+                    key_period = False
 
         if key_left:
             screen_offset[0] -= 4*scale_factor**2
@@ -94,16 +128,17 @@ while True:
             screen_offset[1] -= 4*scale_factor**2
         if key_down:
             screen_offset[1] += 4*scale_factor**2
-        if key_minus:                                
-            if scale_factor <2:
-                scale_factor = 2
+
+        if key_minus:      
             scale_factor += 1000 * key_acceleration
-            key_acceleration += 0.1
+            key_acceleration += 0.1                          
+
         elif key_plus:
             scale_factor -= 1000 * key_acceleration
             key_acceleration += 0.1
-            if scale_factor <2:
-                scale_factor = 2
+            if scale_factor <1000:
+                scale_factor = 1000
+
         else:
             key_acceleration = 0
         if event.type == VIDEORESIZE:
@@ -111,6 +146,6 @@ while True:
             background = pygame.Surface(screen.get_size())
             background.fill((0,0,0))
     for index, item in enumerate(body_list):
-            item.calculate_movement(body_list[index+1:], phys_step = 1)
+            item.calculate_movement(body_list[index+1:], phys_step = simulation_speed)
     phys_counter += 1                
     clock_counter += clock.tick()

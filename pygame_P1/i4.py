@@ -13,20 +13,20 @@ background.fill((0,0,0))
 
 
 body_list = []
-scale_factor = 5
+scale_factor = 1000
 
 screen_size = [1080,720]
 
-planet_one = Body(10000e12, [0,0], [0,0],'circle.png')
+planet_one = Body(6e24, [0,0], [0,0],'circle.png')
 body_list.append(planet_one)
-planet_two = Body(10000, [0,0.1], [5000,0],'star.png')
+planet_two = Body(7e22, [0,1000], [384402000,0],'star.png')
 body_list.append(planet_two)
 
 i =1
 while True:
     if i == 1000:
         i = 0
-        screen.blit(background,(0,0))
+        #screen.blit(background,(0,0))
         for item in body_list:
            item.update_screen_pos(screen, [0,0], scale_factor, screen_size)
            pygame.display.update(item.screen_pos)
