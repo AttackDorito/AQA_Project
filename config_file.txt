@@ -16,3 +16,8 @@ velocity = 0,-30820
 position = 1.49984402e+11,0
 image file = moon.png
 
+name = Mars
+mass = 6.417e+23
+velocity = 0,26500
+position = -206654487070.4,0
+image file = planet.png

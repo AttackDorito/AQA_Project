@@ -3,18 +3,20 @@ import pygame.display
 from pygame.locals import *
 from i8_classes import Body
 from pygame import freetype
+from math import sqrt
 
 pygame.init()
 
 clock = pygame.time.Clock()
 clock.tick()
-font = pygame.freetype.SysFont("Arial.ttf",24)
+font = pygame.freetype.Font("courbd.ttf",16)
 screen = pygame.display.set_mode((1080,720), RESIZABLE)        
 pygame.display.set_caption('test window')
 background = pygame.Surface(screen.get_size())
 background = background.convert()
 background.fill((0,0,0))
 body_list = []
+info_pointer = 0
 
 config_file = open('config_file.txt', "r")
 body_dict = {}
@@ -33,7 +35,6 @@ for x in config_file:
         )
 
         body_dict = {}
-
 
 
 
@@ -59,8 +60,7 @@ key_minus = False
 key_plus = False
 key_comma = False
 key_period = False
-key_[ = False   
-key_]
+view_lock = False
 
 while True:
     if clock_counter > 40:
@@ -68,10 +68,17 @@ while True:
         clock_counter = 0
         phys_counter = 0
         screen.blit(background,(0,0))
+        if view_lock:
+            screen_offset[0] = body_list[info_pointer]._pos[0]
+            screen_offset[1] = body_list[info_pointer]._pos[1]
+
         for item in body_list:
            item.update_screen_pos(screen, screen_offset, scale_factor, screen_size)
         
-        font.render_to(screen, (0,0), f"{round(phys_framerate,-3)},    {scale_factor}",(255,255,255))
+        font.render_to(screen, (0,0), f"name - {body_list[info_pointer].name}",(255,255,255))
+        font.render_to(screen, (0,15), f"mass - {round(body_list[info_pointer]._mass, 3)}kg",(255,255,255))
+        font.render_to(screen, (0,30), f"speed - {round(sqrt(body_list[info_pointer]._vel[0]**2 + body_list[info_pointer]._vel[1]**2),3)}m/s",(255,255,255))
+        font.render_to(screen, (0,45), f"position - {round(body_list[info_pointer]._pos[0], -5)},{round(body_list[info_pointer]._pos[1], -5)}",(255,255,255))
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -94,6 +101,23 @@ while True:
                     key_comma = True
                 if event.key == K_PERIOD:
                     key_period = True
+                if event.key == K_LEFTBRACKET:
+                    if info_pointer == 0:
+                        info_pointer = len(body_list) - 1
+                    else:
+                        info_pointer -= 1
+                    screen_offset[0] = body_list[info_pointer]._pos[0]
+                    screen_offset[1] = body_list[info_pointer]._pos[1]
+                    view_lock = True
+
+                if event.key == K_RIGHTBRACKET:
+                    if info_pointer == len(body_list) -1:
+                        info_pointer = 0
+                    else:
+                        info_pointer += 1
+                    screen_offset[0] = body_list[info_pointer]._pos[0]
+                    screen_offset[1] = body_list[info_pointer]._pos[1]
+                    view_lock = True
                 
             elif event.type == KEYUP:
                 if event.key == K_LEFT:
@@ -122,12 +146,16 @@ while True:
 
         if key_left:
             screen_offset[0] -= 4*scale_factor**2
+            view_lock = False
         if key_right:
             screen_offset[0] += 4*scale_factor**2
+            view_lock = False
         if key_up:
             screen_offset[1] -= 4*scale_factor**2
+            view_lock = False
         if key_down:
             screen_offset[1] += 4*scale_factor**2
+            view_lock = False
 
         if key_minus:      
             scale_factor += 1000 * key_acceleration
@@ -143,6 +171,7 @@ while True:
             key_acceleration = 0
         if event.type == VIDEORESIZE:
             screen_size = pygame.display.get_window_size()
+            print("resize")
             background = pygame.Surface(screen.get_size())
             background.fill((0,0,0))
     for index, item in enumerate(body_list):
