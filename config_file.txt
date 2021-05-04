@@ -30,6 +30,6 @@ image file = venus.png
 
 name = Mercury
 mass = 3.301e+23
-velocity = -58980,0
-position = 0,69816900
+velocity = 58980,0
+position = 0,69816900000
 image file = mercury.png

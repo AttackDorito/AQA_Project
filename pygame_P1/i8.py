@@ -12,7 +12,7 @@ clock.tick()
 font = pygame.freetype.Font("courbd.ttf",16)
 screen = pygame.display.set_mode((1080,720), RESIZABLE)        
 pygame.display.set_caption('test window')
-background = pygame.Surface(screen.get_size())
+background = pygame.Surface((7680,4320))
 background = background.convert()
 background.fill((0,0,0))
 body_list = []
@@ -79,6 +79,7 @@ while True:
         font.render_to(screen, (0,15), f"mass - {round(body_list[info_pointer]._mass, 3)}kg",(255,255,255))
         font.render_to(screen, (0,30), f"speed - {round(sqrt(body_list[info_pointer]._vel[0]**2 + body_list[info_pointer]._vel[1]**2),3)}m/s",(255,255,255))
         font.render_to(screen, (0,45), f"position - {round(body_list[info_pointer]._pos[0], -5)},{round(body_list[info_pointer]._pos[1], -5)}",(255,255,255))
+        font.render_to(screen,(0,60),str(phys_framerate),(255,255,255))
         pygame.display.update()
 
         for event in pygame.event.get():
@@ -169,11 +170,6 @@ while True:
 
         else:
             key_acceleration = 0
-        if event.type == VIDEORESIZE:
-            screen_size = pygame.display.get_window_size()
-            print("resize")
-            background = pygame.Surface(screen.get_size())
-            background.fill((0,0,0))
     for index, item in enumerate(body_list):
             item.calculate_movement(body_list[index+1:], phys_step = simulation_speed)
     phys_counter += 1                
