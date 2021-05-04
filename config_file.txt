@@ -8,7 +8,7 @@ name = Earth
 mass = 5.972e+24
 velocity = 0,-29780
 position = 1.496e+11,0
-image file = planet.png
+image file = Earth.png
 
 name = Moon
 mass = 7.348e+22
@@ -20,4 +20,16 @@ name = Mars
 mass = 6.417e+23
 velocity = 0,26500
 position = -206654487070.4,0
-image file = planet.png
+image file = mars.png
+
+name = Venus
+mass = 4.867e+24
+velocity = 0,-34780
+position = 1.0894e+11,0
+image file = venus.png
+
+name = Mercury
+mass = 3.301e+23
+velocity = -58980,0
+position = 0,69816900
+image file = mercury.png
