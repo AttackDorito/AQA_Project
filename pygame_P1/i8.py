@@ -7,18 +7,19 @@ from math import sqrt
 
 pygame.init()
 
-clock = pygame.time.Clock()
+
+clock = pygame.time.Clock()                                 #initialise clock
 clock.tick()
-font = pygame.freetype.Font("courbd.ttf",16)
-screen = pygame.display.set_mode((1080,720), RESIZABLE)        
-pygame.display.set_caption('test window')
+font = pygame.freetype.Font("courbd.ttf",16)                #load font
+screen = pygame.display.set_mode((1080,720), RESIZABLE)     #initialise screen
+pygame.display.set_caption('test window')                   #create background surface
 background = pygame.Surface((7680,4320))
 background = background.convert()
 background.fill((0,0,0))
-body_list = []
+body_list = []                                              #declare globals
 info_pointer = 0
 
-config_file = open('config_file.txt', "r")
+config_file = open('config_file.txt', "r")                  #read config file line by line
 body_dict = {}
 for x in config_file:
     line = (x.strip('\n').split(' = '))
@@ -26,7 +27,7 @@ for x in config_file:
     if line != ['']:
         body_dict[line[0]] = line[1]
 
-    if len(body_dict) == 5:
+    if len(body_dict) == 5:                                 #create planets from config
         body_list.append(Body(
             float(body_dict['mass']),
             [float(body_dict['velocity'].split(',')[0]),float(body_dict['velocity'].split(',')[1])],
@@ -40,7 +41,7 @@ for x in config_file:
 
 
 
-scale_factor = 1000
+scale_factor = 1000                                 #create global variables
 simulation_speed = 1
 
 screen_offset = [0,0]
@@ -52,7 +53,7 @@ phys_counter = 0
 
 key_acceleration = 0
 
-key_up = False
+key_up = False                                     #key press booleans
 key_down = False
 key_left = False
 key_right = False
@@ -62,8 +63,8 @@ key_comma = False
 key_period = False
 view_lock = False
 
-while True:
-    if clock_counter > 40:
+while True:                                     #main loop
+    if clock_counter > 40:                      #limits to 25 render frames per second
         phys_framerate = phys_counter / clock_counter * 1000 * simulation_speed
         clock_counter = 0
         phys_counter = 0
@@ -72,7 +73,7 @@ while True:
             screen_offset[0] = body_list[info_pointer]._pos[0]
             screen_offset[1] = body_list[info_pointer]._pos[1]
 
-        for item in body_list:
+        for item in body_list:                                                    #draw icons on screen
            item.update_screen_pos(screen, screen_offset, scale_factor, screen_size)
         
         font.render_to(screen, (0,0), f"name - {body_list[info_pointer].name}",(255,255,255))
@@ -82,7 +83,7 @@ while True:
         font.render_to(screen,(0,60),str(phys_framerate),(255,255,255))
         pygame.display.update()
 
-        for event in pygame.event.get():
+        for event in pygame.event.get():                        #event loop handling
             if event.type == QUIT:
                 exit()
             if event.type == KEYDOWN:
@@ -118,8 +119,7 @@ while True:
                         info_pointer += 1
                     screen_offset[0] = body_list[info_pointer]._pos[0]
                     screen_offset[1] = body_list[info_pointer]._pos[1]
-                    view_lock = True
-                
+                    view_lock = True                
             elif event.type == KEYUP:
                 if event.key == K_LEFT:
                     key_left = False
@@ -144,7 +144,6 @@ while True:
                     else:
                         simulation_speed += 10
                     key_period = False
-
         if key_left:
             screen_offset[0] -= 4*scale_factor**2
             view_lock = False
@@ -157,20 +156,17 @@ while True:
         if key_down:
             screen_offset[1] += 4*scale_factor**2
             view_lock = False
-
         if key_minus:      
             scale_factor += 1000 * key_acceleration
             key_acceleration += 0.1                          
-
         elif key_plus:
             scale_factor -= 1000 * key_acceleration
             key_acceleration += 0.1
             if scale_factor <1000:
                 scale_factor = 1000
-
         else:
             key_acceleration = 0
-    for index, item in enumerate(body_list):
+    for index, item in enumerate(body_list):                                            #simulate physics
             item.calculate_movement(body_list[index+1:], phys_step = simulation_speed)
-    phys_counter += 1                
-    clock_counter += clock.tick()
+    phys_counter += 1                                                                   #increment counter
+    clock_counter += clock.tick()                                                       #increment clock
