@@ -8,7 +8,7 @@ name = Earth
 mass = 5.972e+24
 velocity = 0,-29780
 position = 1.496e+11,0
-image file = Earth.png
+image file = earth.png
 
 name = Moon
 mass = 7.348e+22
