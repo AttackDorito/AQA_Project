@@ -4,7 +4,7 @@ from math import sqrt
 class Body():
     def __init__(self,mass, vel, pos, image, name = 'default_object_name'):
         
-        self.image = pygame.image.load(image)
+        self.image = pygame.image.load("Assets/"+image)
         self._mass = mass
         self._pos = pos
         self._vel = vel

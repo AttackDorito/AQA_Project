@@ -10,7 +10,7 @@ pygame.init()
 
 clock = pygame.time.Clock()                                 #initialise clock
 clock.tick()
-font = pygame.freetype.Font("courbd.ttf",16)                #load font
+font = pygame.freetype.Font("Assets/courbd.ttf",16)                #load font
 screen = pygame.display.set_mode((1080,720), RESIZABLE)     #initialise screen
 pygame.display.set_caption('test window')                   #create background surface
 background = pygame.Surface((7680,4320))
