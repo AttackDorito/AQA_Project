@@ -1,7 +1,7 @@
 from pygame.constants import RESIZABLE, VIDEORESIZE
 import pygame.display
 from pygame.locals import *
-from i8_classes import Body
+from simulation_script import Body
 from pygame import freetype
 from math import sqrt
 
@@ -16,29 +16,48 @@ pygame.display.set_caption('test window')                   #create background s
 background = pygame.Surface((7680,4320))
 background = background.convert()
 background.fill((0,0,0))
-body_list = []                                              #declare globals
+                                         #declare globals
 info_pointer = 0
-
-config_file = open('config_file.txt', "r")                  #read config file line by line
-body_dict = {}
-for x in config_file:
-    line = (x.strip('\n').split(' = '))
-
-    if line != ['']:
-        body_dict[line[0]] = line[1]
-
-    if len(body_dict) == 5:                                 #create planets from config
-        body_list.append(Body(
-            float(body_dict['mass']),
-            [float(body_dict['velocity'].split(',')[0]),float(body_dict['velocity'].split(',')[1])],
-            [float(body_dict['position'].split(',')[0]),float(body_dict['position'].split(',')[1])],
-            body_dict['image file'],name = body_dict['name'])
-        )
-
-        body_dict = {}
-
+config_file = None
+def get_config_file():         
+    try:
+        with open(input("Enter filename to load config >>> ")) as configfile:
+            config_file = list(configfile)
+        try:
+            return read_config_file(configfile)
+        except:
+            print("the file is not compatible with the program. Please check your spelling and syntax.")
+            if input("try another file? Y/N >>").lower != "y":
+                quit()
+            return get_config_file()
+    except:
+        print("file does not exist")
+        if input("try another file? Y/N >>").lower != "y":
+            quit()
+        return get_config_file()
 
 
+
+def read_config_file(config_file):
+    body_list = []
+    for x in config_file:
+        line = (x.strip('\n').split(' = '))
+
+        if line != ['']:
+            body_dict[line[0]] = line[1]
+
+        if len(body_dict) == 5:                                 #create planets from config
+            body_list.append(Body(
+                float(body_dict['mass']),
+                [float(body_dict['velocity'].split(',')[0]),float(body_dict['velocity'].split(',')[1])],
+                [float(body_dict['position'].split(',')[0]),float(body_dict['position'].split(',')[1])],
+                body_dict['image file'],name = body_dict['name'])
+            )
+
+            body_dict = {}
+    return body_list
+body_list = get_config_file()
+print(body_list)
 
 
 scale_factor = 1000                                 #create global variables
